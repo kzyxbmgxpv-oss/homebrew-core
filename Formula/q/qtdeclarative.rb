@@ -1,10 +1,10 @@
 class Qtdeclarative < Formula
   desc "QML, Qt Quick and several related modules"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qtdeclarative-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qtdeclarative-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qtdeclarative-everywhere-src-6.9.3.tar.xz"
-  sha256 "5a071b227229afbf5c976b7b59a0d850818d06ae861fcdf6d690351ca3f8a260"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qtdeclarative-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qtdeclarative-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qtdeclarative-everywhere-src-6.10.0.tar.xz"
+  sha256 "6efd35520902395d865bc12e89f8442c3c228d0374f13af9a1888b844f56f6b0"
   license all_of: [
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
     { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } }, # qml
@@ -45,8 +45,12 @@ class Qtdeclarative < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework") if OS.mac?
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
   end
 
   test do
