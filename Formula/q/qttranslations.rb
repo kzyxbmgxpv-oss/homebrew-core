@@ -1,10 +1,10 @@
 class Qttranslations < Formula
   desc "Qt translation catalogs"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qttranslations-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qttranslations-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qttranslations-everywhere-src-6.9.3.tar.xz"
-  sha256 "f36d545e6681b146fd79b3ebb74ef275e88694cf81eae8323327cae3bfc490a1"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qttranslations-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qttranslations-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qttranslations-everywhere-src-6.10.0.tar.xz"
+  sha256 "326e8253cfd0cb5745238117f297da80e30ce8f4c1db81990497bd388b026cde"
   license "BSD-3-Clause"
   head "https://code.qt.io/qt/qttranslations.git", branch: "dev"
 
