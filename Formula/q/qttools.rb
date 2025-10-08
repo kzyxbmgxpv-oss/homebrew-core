@@ -10,10 +10,10 @@ class Qttools < Formula
   head "https://code.qt.io/qt/qttools.git", branch: "dev"
 
   stable do
-    url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qttools-everywhere-src-6.9.3.tar.xz"
-    mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qttools-everywhere-src-6.9.3.tar.xz"
-    mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qttools-everywhere-src-6.9.3.tar.xz"
-    sha256 "0cf7ab0e975fc57f5ce1375576a0a76e9ede25e6b01db3cf2339cd4d9750b4e9"
+    url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qttools-everywhere-src-6.10.0.tar.xz"
+    mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qttools-everywhere-src-6.10.0.tar.xz"
+    mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qttools-everywhere-src-6.10.0.tar.xz"
+    sha256 "d86d5098cf3e3e599f37e18df477e65908fc8f036e10ea731b3469ec4fdbd02a"
 
     # Backport fix for build on Linux
     patch do
@@ -73,10 +73,12 @@ class Qttools < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    return unless OS.mac?
-
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework")
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
 
     bin.glob("*.app") do |app|
       libexec.install app
