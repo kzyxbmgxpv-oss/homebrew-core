@@ -1,10 +1,10 @@
 class Qtimageformats < Formula
   desc "Plugins for additional image formats: TIFF, MNG, TGA, WBMP"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qtimageformats-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qtimageformats-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qtimageformats-everywhere-src-6.9.3.tar.xz"
-  sha256 "4fb26bdbfbd4b8e480087896514e11c33aba7b6b39246547355ea340c4572ffe"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qtimageformats-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qtimageformats-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qtimageformats-everywhere-src-6.10.0.tar.xz"
+  sha256 "64450a52507c540de53616ed5e516df0e0905a99d3035ddfaa690f2b3f7c0cea"
   license all_of: [
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
     "BSD-3-Clause", # *.cmake
@@ -49,8 +49,12 @@ class Qtimageformats < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework") if OS.mac?
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
   end
 
   test do
