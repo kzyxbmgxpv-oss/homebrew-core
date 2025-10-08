@@ -1,10 +1,10 @@
 class Qtgrpc < Formula
   desc "Provides support for communicating with gRPC services"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qtgrpc-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qtgrpc-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qtgrpc-everywhere-src-6.9.3.tar.xz"
-  sha256 "7963c879cb72d5bebea1724602e6896cdc26e8555d872259f217c6b1130afe02"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qtgrpc-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qtgrpc-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qtgrpc-everywhere-src-6.10.0.tar.xz"
+  sha256 "fb722289066101ae08865378e7fb29a22b416a71f6b1c19ae5a957f53a91a445"
   license all_of: [
     "GPL-3.0-only", # QtGrpc
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] }, # QtProtobuf
@@ -43,8 +43,12 @@ class Qtgrpc < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework") if OS.mac?
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
   end
 
   test do
