@@ -1,10 +1,10 @@
 class Qtspeech < Formula
   desc "Enables access to text-to-speech engines"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qtspeech-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qtspeech-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qtspeech-everywhere-src-6.9.3.tar.xz"
-  sha256 "f86f5a4c742fb86ccc6e90ee72a9213150986575c3d238829a4b48a28bc9ab3e"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qtspeech-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qtspeech-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qtspeech-everywhere-src-6.10.0.tar.xz"
+  sha256 "13033066830ccc8be50951e3a2f2564c712e5f5e9b0af4e1040184f1a64aa51e"
   license all_of: [
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
     "BSD-3-Clause", # *.cmake
@@ -40,8 +40,12 @@ class Qtspeech < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework") if OS.mac?
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
   end
 
   test do
