@@ -1,10 +1,10 @@
 class Qtquick3d < Formula
   desc "Provides a high-level API for creating 3D content or UIs based on Qt Quick"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qtquick3d-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qtquick3d-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qtquick3d-everywhere-src-6.9.3.tar.xz"
-  sha256 "91b270049f38ad2b7370c2e6edc72c19ed7d5d2281d914457586f29daccace73"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qtquick3d-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qtquick3d-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qtquick3d-everywhere-src-6.10.0.tar.xz"
+  sha256 "98258c1ea876e1f29fd73889f1de32008d13c91c9bff3fc8edfd92f663ecd488"
   license all_of: [
     "GPL-3.0-only",
     { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } },
@@ -60,8 +60,12 @@ class Qtquick3d < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework") if OS.mac?
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
   end
 
   test do
