@@ -1,10 +1,10 @@
 class Qtwebchannel < Formula
   desc "Bridges the gap between Qt applications and HTML/JavaScript"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qtwebchannel-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qtwebchannel-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qtwebchannel-everywhere-src-6.9.3.tar.xz"
-  sha256 "9457bbc1e5a13d9cf277c1fc121cdeb0a21546abf7fba091779b7ce9806fa305"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qtwebchannel-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qtwebchannel-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qtwebchannel-everywhere-src-6.10.0.tar.xz"
+  sha256 "74165864fabf580e622fbb52553d8ca41b53b660ba20ec1f73fb71f4d9a95009"
   license all_of: [
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
     "BSD-3-Clause", # *.cmake
@@ -39,8 +39,12 @@ class Qtwebchannel < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework") if OS.mac?
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
   end
 
   test do
