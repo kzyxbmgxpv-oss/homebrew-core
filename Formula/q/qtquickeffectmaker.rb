@@ -1,10 +1,10 @@
 class Qtquickeffectmaker < Formula
   desc "Tool to create custom Qt Quick shader effects"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qtquickeffectmaker-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qtquickeffectmaker-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qtquickeffectmaker-everywhere-src-6.9.3.tar.xz"
-  sha256 "6bf0361d24a0865cba9d94ff169c64cd69ac5d90c85260c29ec84ee5c2a59912"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qtquickeffectmaker-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qtquickeffectmaker-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qtquickeffectmaker-everywhere-src-6.10.0.tar.xz"
+  sha256 "64c21d028bebe90fb32df2c751ed4fc8c5219bff50173a0bbf1d33b28c2eb96e"
   license all_of: [
     { "GPL-3.0-only" => { with: "Qt-GPL-exception-1.0" } },
     "BSD-3-Clause", # BlurHelper.qml
@@ -40,10 +40,12 @@ class Qtquickeffectmaker < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    return unless OS.mac?
-
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework")
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
 
     bin.glob("*.app") do |app|
       libexec.install app
