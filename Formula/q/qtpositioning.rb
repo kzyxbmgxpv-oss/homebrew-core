@@ -1,10 +1,10 @@
 class Qtpositioning < Formula
   desc "Provides access to position, satellite info and area monitoring classes"
   homepage "https://www.qt.io/"
-  url "https://download.qt.io/official_releases/qt/6.9/6.9.3/submodules/qtpositioning-everywhere-src-6.9.3.tar.xz"
-  mirror "https://qt.mirror.constant.com/archive/qt/6.9/6.9.3/submodules/qtpositioning-everywhere-src-6.9.3.tar.xz"
-  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.9/6.9.3/submodules/qtpositioning-everywhere-src-6.9.3.tar.xz"
-  sha256 "0c87c980f704c17aadaf0bf8a03845dd0a60cc0313be24bd7b5b90685d5835b4"
+  url "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qtpositioning-everywhere-src-6.10.0.tar.xz"
+  mirror "https://qt.mirror.constant.com/archive/qt/6.10/6.10.0/submodules/qtpositioning-everywhere-src-6.10.0.tar.xz"
+  mirror "https://mirrors.ukfast.co.uk/sites/qt.io/archive/qt/6.10/6.10.0/submodules/qtpositioning-everywhere-src-6.10.0.tar.xz"
+  sha256 "ecbfbc90636be19d65c975716e26689558e030e841c4a01afb3bd425756a1ee1"
   license all_of: [
     { any_of: ["LGPL-3.0-only", "GPL-2.0-only", "GPL-3.0-only"] },
     "BSD-3-Clause", # bundled poly2tri; *.cmake
@@ -42,8 +42,12 @@ class Qtpositioning < Formula
     system "cmake", "--build", "build"
     system "cmake", "--install", "build"
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
-    frameworks.install_symlink lib.glob("*.framework") if OS.mac?
+    lib.glob("*.framework") do |f|
+      # Some config scripts will only find Qt in a "Frameworks" folder
+      frameworks.install_symlink f
+      # Workaround until pkg-config files handle framework in cflags
+      include.install_symlink f/"Headers" => f.stem
+    end
   end
 
   test do
